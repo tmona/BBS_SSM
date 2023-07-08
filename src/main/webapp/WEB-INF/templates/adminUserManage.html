@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>
+
+      /*#adduser{*/
+      /*  width: 500px;*/
+      /*  height: 300px;*/
+      /*  border: 1px solid #c0c0c0;*/
+      /*  background: #ffffff;*/
+      /*  position: absolute;*/
+      /*  left: 50%;*/
+      /*  top: 20%;*/
+      /*}*/
+      #adduser p{
+        padding-left: 15px;
+      }
+      .adduser_p{
+        background: #f2f2f2;
+        height: 30px;
+        line-height: 30px;
+        padding-left: 5px;
+      }
+
+
+  </style>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/login.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/adminUserManage.css}"/>
+<script type="text/javascript" th:src="@{/static/js/jquery-1.8.2.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/vue.global.js}"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<body>
+
+<div>
+  <div>
+    <form th:action="@{/searchUser}">
+      <input type="text" placeholder="搜索" name="content" class="search-ipt">
+      <input type="submit" value="搜索" class="search_btn">
+    </form>
+  </div>
+
+  <div class="userManage">
+    <table th:border="1"  class="pure-table pure-table-bordered">
+      <tr>
+        <th th:colspan="2">管理员用户</th>
+      </tr>
+      <tr>
+        <th>用户名</th>
+        <th>操作</th>
+      </tr>
+      <div th:if="${adminUserList}" >
+        <tr th:each="user:${adminUserList}">
+            <td th:text="${user.username}"></td>
+            <td>
+              <a th:href="@{'/adminuser/update/'+${user.id}}" th:text="修改" onclick="updateAdminUser()" th:data-username="${user.username}"></a>
+              <a th:href="@{'/adminuser/delete/'+${user.id}}" th:text="删除" onclick="deleteAdminUser()"></a>
+            </td>
+        </tr>
+      </div>
+      <form action="" id="adminform" method="post">
+        <input type="hidden" name="_method" value="delete">
+      </form>
+    </table>
+  </div>
+  <div id="adduser">
+    <form th:action="@{/adminuser/adduser/}" method="post" id="addUserForm" >
+      <p class="adduser_p" style="color:black">添加管理员</p>
+      <div class="row">
+        <span class="label">用户名</span>
+        <input type="text" name="username" id="username" class="medium">
+      </div>
+      <br>
+      <div class="row">
+        <span class="label"> 密码</span>
+        <input type="password" name="userpass" class="medium">
+      </div>
+      <br>
+      <div class="row">
+        <input type="submit" value="添加" id="save" class="button green"/>
+        <button type="reset" class="button">重置</button>
+      </div>
+
+    </form>
+  </div>
+
+  <div id="updateuser">
+    <form method="post" id="updateUserForm" >
+      <p class="adduser_p" style="color:black">修改管理员密码</p>
+      <div class="row">
+        <span class="label">用户名</span>
+        <input type="text" name="username" class="medium" id="name">
+      </div>
+      <br>
+      <div class="row">
+        <span class="label"> 密码</span>
+        <input type="password" name="userpass" class="medium" >
+      </div>
+      <br>
+      <div class="row">
+        <input type="button" value="修改" class="button green" onclick="updatePassBtn()"/>
+        <button type="reset" class="button" onclick="cancelUpdate()">取消</button>
+      </div>
+
+    </form>
+  </div>
+
+
+
+
+</div>
+
+<script type="text/javascript">
+
+  function deleteAdminUser(){
+    var form=document.getElementById('adminform');
+    form.action=event.target.href;
+    form.submit();
+    event.preventDefault();
+  }
+
+  function updateAdminUser(){
+
+    $('#name').val($(event.target).attr('data-username'));
+
+    $('#updateuser').css({'display':'block'});
+    $('#updateUserForm').attr("action",event.target.href);
+     // alert('显示成功')
+    // 阻止超链接默认行为
+    event.preventDefault();
+
+  }
+
+  function updatePassBtn(){
+    // alert('updatePassBtn()');
+    $.ajax({
+      url:$('#updateUserForm').attr("action"),
+      type:'post',
+      data:$('#updateUserForm').serialize(),
+      success:function(){
+        alert('修改成功');
+        $('#updateuser').css({'display':'none'});
+
+      },
+      error:function(){
+        alert('修改失败');
+      }
+
+    })
+  }
+
+  function cancelUpdate(){
+    $('#updateuser').css({'display':'none'});
+  }
+
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link th:href="@{/static/css/admin.css}" rel="stylesheet">
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+
+<!--管理员首页-->
+
+<body>
+
+<div class="container">
+
+
+    <div class="content">
+
+        <ul class="left">
+            <div class="header">
+                <p>BBS论坛</p>
+            </div>
+            <li class="left_nav_items"><a th:href="@{/showBoard/page/1}" target="right">板块管理</a></li>
+            <li class="left_nav_items"><a th:href="@{/showBbshot/page/1}" target="right">精华帖管理</a></li>
+            <li class="left_nav_items"><a th:href="@{/adminUserManage}" target="right">管理员用户管理</a></li>
+            <li class="left_nav_items"><a th:href="@{/personalnfo}" target="right">个人中心</a></li>
+        </ul>
+        <div class="right">
+            <iframe name="right" width="100%" class="auto-height" id="autoHeightFrame" th:src="@{/showBoard/page/1}"></iframe>
+        </div>
+    </div>
+
+</div>
+
+</body>
+
+<!--设置框架的自适应高度-->
+<script>
+    // 获取 iframe 元素
+    var frame = document.getElementById('autoHeightFrame');
+
+    // 监听 iframe 内容加载完成事件
+    frame.onload = function() {
+        // 设置 iframe 高度为内容的滚动高度
+        this.style.height = this.contentWindow.document.body.scrollHeight +400+ 'px';
+    };
+</script>
+
+
+</html>

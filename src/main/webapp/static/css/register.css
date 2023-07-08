@@ -1,0 +1,60 @@
+
+.main-container #registerForm{
+    display:inline-block;
+    margin-left:250px;
+    margin-top:50px;
+
+}
+#registerForm .row{
+    position: relative;
+    display: inline-block;
+    /*width: 100%;*/
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: 25px;
+    margin-left: 14px;
+}
+#registerForm .row > *{
+    font-size: 14px;
+    color: #333;
+    vertical-align: middle;
+}
+#registerForm .row .label{
+    display: inline-block;
+    width: 135px;
+    letter-spacing: 0.05em;
+}
+#registerForm .row input.medium{
+    width: 180px;
+}
+
+#registerForm .row input[type=password],input[type=text]{
+    border-radius: 3px;
+    line-height: 28px;
+    margin: 0;
+    border: 1px solid #eeeeee;
+    padding: 0 10px;
+    font-size: 12px;
+    background: white;
+    box-shadow: inset 0px 1px 0px 0px rgba(0, 0, 0, 0.03), inset 0px 3px 0px 0px rgba(0, 0, 0, 0.02);
+    outline: none;
+    resize: none;
+    font-family: "tahoma", "tahoma2", -apple-system, "BlinkMacSystemFont", "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
+}
+.main-container #registerForm .button{
+    position: relative;
+    display: inline-block;
+    margin-right: 30px;
+    border-radius: 3px;
+    border: 1px solid #959595;
+    width: 78px;
+    height: 28px;
+    text-align: center;
+    background: white;
+    cursor:pointer;
+}
+.main-container #registerForm .button.red{
+    background: #e97c62;
+    border: 1px solid #e97c62;
+    color: white !important;
+}

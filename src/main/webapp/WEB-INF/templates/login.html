@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        .error{
+            color:red;
+        }
+    </style>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/login.css}"/>
+<!--jquery 表单校验-->
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+
+
+<!--登录页面-->
+<body id="page-register">
+<!--BBS系统 首页-->
+<div class="top-red">
+    <div class="logo">
+        <span class="h1">BBS论坛</span>
+    </div>
+
+</div>
+    <!--       登录模块-->
+    <div class="main-container">
+            <form method="post" id="loginForm" th:action="@{/login}" name="myForm">
+                <div class="row" >
+                    <span class="label">用户名</span>
+                    <input type="text" name="username" id="username" placeholder="用户名 / username" class="medium">
+                </div>
+                <br>
+                <div class="row" >
+                    <span class="label"> 密码</span>
+                    <input type="password" name="userpass" id="userpass" placeholder="密码 / password" class="medium">
+                </div>
+                <input type="hidden" name="consumer" value="0"><br>
+                <span th:text="${error}" th:style="${error} ? 'color: red;' : ''"></span><br>
+                <div class="row" style="margin-top: 10px;">
+                    <input type="submit" value="登录" class="button green" onclick="userLogin()">
+                    <input type="reset" value="清除" class="button">
+                </div>
+
+            </form>
+    </div>
+<!--表单验证-->
+    <script type="text/javascript">
+        $('#loginForm').validate({
+            rules:{
+                username:"required",
+                userpass:"required"
+            },
+            messages:{
+                username:{
+                    required:"*请输入您的用户名"
+                },
+                userpass:{
+                    required:"*请输入密码"
+                }
+            }
+        })
+    </script>
+
+
+    <script type="text/javascript">
+        function userLogin(){
+            var username=docuement.forms["myForm"]["username"];
+            var userpass=docuement.forms["myForm"]["userpass"];
+            if(username==null||username==""){
+                alert("用户名必须填写");
+                return false;
+            }
+            else if(userpass==null||userpass==""){
+                alert("密码必须填写");
+                return false;
+            }
+            return true;
+        }
+    </script>
+
+</body>
+</html>

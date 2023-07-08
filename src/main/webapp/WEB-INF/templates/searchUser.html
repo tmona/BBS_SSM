@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<body>
+
+<table th:border="1"  class="pure-table pure-table-bordered">
+    <tr>
+        <th th:colspan="2">管理员用户</th>
+    </tr>
+    <tr>
+        <th>用户名</th>
+        <th>操作</th>
+    </tr>
+    <div th:if="${users}" >
+        <tr th:each="user:${users}">
+            <td th:text="${user.username}"></td>
+            <td>
+                <a th:href="@{'/adminuser/delete/'+${user.id}}" th:text="删除" onclick="deleteAdminUser()"></a>
+            </td>
+        </tr>
+    </div>
+    <form action="" id="adminform" method="post">
+        <input type="hidden" name="_method" value="delete">
+    </form>
+</table>
+<script type="text/javascript">
+
+    function deleteAdminUser(){
+        var form=document.getElementById('adminform');
+        form.action=event.target.href;
+        form.submit();
+        event.preventDefault();
+    }
+
+</script>
+</body>
+</html>

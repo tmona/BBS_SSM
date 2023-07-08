@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<!--游客未登录错误页面-->
+<body>
+  <div>
+    <img th:src="@{/static/images/error.jpg}" alt="404错误页面">
+      <div id="error-body">
+          <div id="error-image"></div>
+          <p>您尚未登录，无法查看精华区收藏夹。<br>请通过页面左侧 <a th:href="@{/login}" target="right">登录</a></p>
+      </div>
+  </div>
+</body>
+</html>

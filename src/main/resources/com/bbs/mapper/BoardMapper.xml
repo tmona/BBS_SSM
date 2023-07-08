@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bbs.mapper.BoardMapper">
+
+
+<!--    List<Board> selectAllBoard();-->
+
+    <resultMap id="getAllBoard" type="Board">
+
+        <id property="boardid" column="boardid"></id>
+        <result property="boardname" column="boardname"></result>
+        <result property="boardtopics" column="boardtopics"></result>
+        <result property="boardmanager" column="boardmanager"></result>
+        <result property="boardintroduce" column="boardintroduce"></result>
+        <result property="boardlasttime" column="boardlasttime"></result>
+                <collection property="postList" ofType="Post" column="boardid" select="selectPosts">
+                </collection>
+    </resultMap>
+
+<!-- 父查询   -->
+    <select id="selectAllBoard" resultMap="getAllBoard">
+        select * from board
+    </select>
+
+<!--   子查询  -->
+    <select id="selectPosts" resultType="Post">
+        select bs.* from bbs_bbs bs where bs.boardid=#{boardid}
+    </select>
+
+
+<!--     Board selectByBoardid(Integer boardid);-->
+    <select id="selectByBoardid" resultMap="getAllBoard">
+        select * from board b where b.boardid=#{boardid}
+    </select>
+
+<!--     List<Board> searchBoardByContent(String content);-->
+
+    <select id="searchBoardByContent" resultMap="getAllBoard">
+        select * from board where match(`boardname`,`boardintroduce`) against (#{content} in NATURAL LANGUAGE MODE)
+    </select>
+
+
+<!--     int addBoard(Board b);-->
+
+    <insert id="addBoard">
+        insert into board values(null,#{boardname},0,#{boardmanager},#{boardintroduce},now())
+    </insert>
+
+
+<!--    int deleteBoard(Integer boardid);-->
+
+    <delete id="deleteBoard">
+        delete from board where boardid=#{boardid}
+    </delete>
+
+<!--     int updateBoard(Integer boardid, Board board);-->
+
+    <update id="updateBoard">
+        update board set boardname=#{b.boardname},boardintroduce=#{b.boardintroduce},boardlasttime=now() where boardid=#{b.boardid}
+    </update>
+
+<!--    int updateAddBoardTopic(Integer boardid);-->
+
+    <update id="updateAddBoardTopic">
+        update board set boardtopics=boardtopics+1,boardlasttime=now() where boardid=#{boardid}
+    </update>
+
+<!--          int updateBoardLastTime(@Param("boardid")Integer boardid,@Param("boardlasttime") Date boardlasttime);-->
+
+    <update id="updateBoardLastTime">
+        update board set boardlasttime=#{boardlasttime} where boardid=#{boardid}
+    </update>
+
+
+<!--     int updateSubBoardTopic(Integer boardid);-->
+
+    <update id="updateSubBoardTopic">
+        update board set boardtopics=boardtopics-1 where boardid=#{boardid}
+    </update>
+
+</mapper>

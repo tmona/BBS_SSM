@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bbs.mapper.BbsMapper">
+
+
+<!--    List<Post> selectByBoardid(Integer boardid);-->
+
+    <select id="selectByBoardid" resultType="Post">
+            select * from bbs_bbs where boardid=#{boardid}
+    </select>
+
+<!--      Post selectByBbsid(Integer bbsid);-->
+
+    <select id="selectByBbsid" resultType="Post">
+        select * from bbs_bbs where bbsid=#{bbsid}
+    </select>
+
+<!--    List<Post> selectByBbsideqParent(Integer bbsid);-->
+
+    <select id="selectByBbsideqParent" resultType="Post">
+        select * from bbs_bbs where parentid=#{bbsid}
+    </select>
+
+
+<!--     List<Post> getAllBbshot();-->
+    <select id="getAllBbshot" resultType="Post">
+        select * from bbs_bbs where bbshot='1'
+    </select>
+
+<!--     List<Post> searchBbsByContent(String content);-->
+
+    <select id="searchBbsByContent" resultType="Post">
+        select * from bbs_bbs where match(`bbstitle`,`bbscontent`) against (#{content} in NATURAL LANGUAGE MODE)
+    </select>
+
+<!--     int addBbs(Post post);-->
+
+    <insert id="addBbs" useGeneratedKeys="true" keyProperty="bbsid">
+        insert into bbs_bbs values(null,#{p.boardid},null,0,#{p.username},#{p.expression},#{p.bbstitle},#{p.bbscontent},now(),0,'0')
+    </insert>
+
+
+<!--    int updateBbs(@Param("bbstitle")String bbstitle,@Param("bbscontent")String bbscontent);-->
+
+    <update id="updateBbs">
+        update bbs_bbs set bbstitle=#{bbstitle},bbscontent=#{bbscontent},dateandtime=now() where bbsid=#{bbsid}
+    </update>
+
+<!--     int updateBbsChild(Integer bbsid);-->
+
+    <update id="updateBbsChild">
+        update bbs_bbs set child=child+1 where bbsid=#{bbsid}
+    </update>
+
+<!--    int updateSubBbsChild(Integer bbsid);-->
+
+    <update id="updateSubBbsChild">
+        update bbs_bbs set child=child-1 where bbsid=#{bbsid}
+    </update>
+
+<!--     int updateBbshot(Integer bbsid);-->
+
+    <update id="updateBbshot">
+        update bbs_bbs set bbshot='1' where bbsid=#{bbsid}
+    </update>
+
+    <!--    int deleteBbshot(Integer bbsid);-->
+
+    <update id="deleteBbshot">
+        update bbs_bbs set bbshot='0' where bbsid=#{bbsid}
+    </update>
+
+
+<!--    int updateBbsclick(Integer bbsid);-->
+
+    <update id="updateBbsclick">
+        update bbs_bbs set bbsclick=bbsclick+1 where bbsid=#{bbsid}
+    </update>
+
+<!--      int deleteByBbsid(Integer bbsid);-->
+
+    <delete id="deleteByBbsid">
+        delete from bbs_bbs where bbsid=#{bbsid}
+    </delete>
+
+</mapper>

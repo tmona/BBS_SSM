@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bbs.mapper.CommentMapper">
+
+<!--    int addComment(@Param("comment")CommentDat comment);-->
+    <insert id="addComment" useGeneratedKeys="true" keyProperty="id">
+
+        insert into comments values(null,#{comment.username},#{comment.userId},#{comment.articleId},#{comment.message},#{comment.parentId},#{comment.parentName},#{comment.originalId},now())
+
+    </insert>
+
+<!--   List<CommentDat> getAllRoot(Integer id);-->
+
+    <select id="getAllRoot" resultType="CommentDat">
+        select * from comments where parent_id is null and article_id=#{id} order by created_at desc
+    </select>
+<!-- List<CommentDat> getChildren(Integer originId, Integer articleId);-->
+
+    <select id="getChildren" resultType="CommentDat">
+        select * from comments where original_id=#{originId} and article_id=#{articleId} order by created_at desc
+    </select>
+
+<!--    CommentDat getCommentByid(Integer id);-->
+
+    <select id="getCommentByid" resultType="CommentDat">
+        select * from comments where id=#{id}
+    </select>
+
+
+
+<!--     int deletecomment(Integer id);-->
+
+    <delete id="deletecomment">
+        delete from comments where id=#{id}
+    </delete>
+
+</mapper>

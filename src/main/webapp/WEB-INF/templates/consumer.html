@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/admin.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/consumer.css}"/>
+<script type="text/javascript" th:src="@{/static/js/jquery-1.8.2.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/vue.global.js}"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!--jquery 表单校验-->
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+
+
+<!--游客和普通用户页面，板块页面-->
+<body>
+<div>
+    <div class="content">
+        <div class="left">
+            <div class="header">
+                <p>BBS论坛</p>
+            </div>
+            <div th:if="${session.user==null}" id="user_login_register">
+                <form method="post" id="loginForm" th:action="@{/login}">
+
+                        <div class="input-wrapper">
+                            <input type="text" name="username" id="username" placeholder="用户名 / username" class="user_info">
+                        </div>
+                        <div class="input-wrapper">
+                            <input type="password" name="userpass" id="userpass" placeholder="密码 / password" class="user_info">
+                        </div>
+                    <input type="hidden" name="consumer" value="1">
+                    <span th:text="${error}" th:style="${error} ? 'color: red;' : ''"></span>
+                    <div class="btn-group">
+                    <input type="submit" value="登录" class="login_btn">&nbsp;&nbsp;
+                        <a th:href="@{/register}" target="right" id="btn-register">注册</a>
+                    </div>
+                </form>
+            </div>
+            <ul >
+                <li class="left_nav_items"><a th:href="@{/consumerBoard}" target="right">板块浏览</a></li>
+                <li class="left_nav_items"><a th:href="@{/essentialArea}" target="right">精华区</a></li>
+                <li class="left_nav_items"><a th:href="@{/personalnfo}" target="right">个人中心</a></li>
+            </ul>
+        </div>
+        <div class="right">
+            <iframe name="right" width="100%" class="auto-height" id="autoHeightFrame" th:src="@{/consumerBoard}"></iframe>
+        </div>
+    </div>
+</div>
+
+
+
+    <!--设置框架的自适应高度-->
+    <script>
+        // 获取 iframe 元素
+        var frame = document.getElementById('autoHeightFrame');
+
+        // 监听 iframe 内容加载完成事件
+        frame.onload = function() {
+            // 设置 iframe 高度为内容的滚动高度
+            this.style.height = this.contentWindow.document.body.scrollHeight +400+ 'px';
+        };
+    </script>
+
+<!--    登录校验-->
+    <script type="text/javascript">
+       $('#loginForm').validate({
+           rules:{
+               username:"required",
+               userpass:"required"
+           },
+           messages:{
+               username:{
+                   required:"*请输入您的用户名"
+               },
+               userpass:{
+                   required:"*请输入密码"
+               }
+           }
+       })
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<script type="text/javascript" th:src="@{/static/js/jquery-1.8.2.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/vue.global.js}"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<body>
+
+
+<div>
+    <div th:if="${session.user.usertype=='1'}">
+        <a th:href="@{/consumer}">首页</a> &raquo;<a th:href="@{/personalnfo}">个人中心</a>
+    </div>
+
+    <div>
+
+        <img th:src="@{${session.user.userheaderimage}}" alt="用户头像" style="width: 80px;height: 80px;border-radius: 50%;margin-right: 5px;">
+        <a th:href="@{/editPersonalnfo}">编辑个人资料</a>
+
+       <ul id="personalInfo_item" th:data-userid="${session.user.id}">
+           <h1>基本信息</h1>
+           <li id="edit_username_item">
+               <div id="edit_username_hide">
+                   用户昵称：<span th:text="${session.user.username}" id="username"></span>
+               </div>
+           </li>
+           <li id="edit_sex_item">
+
+               <div id="edit_sex_hide">
+                   性别：<span th:text="${session.user.sex}"></span>
+               </div>
+           </li>
+           <li id="edit_email_item">
+
+               <div id="edit_email_hide">
+                   电子邮件：
+                   <span th:text="${session.user.usermail}"></span>
+               </div>
+           </li>
+           <li id="edit_usersign_item">
+
+               <div id="edit_usersign_hide">
+                   个人简介：
+                   <span th:text="${session.user.usersign}"></span>
+               </div>
+           </li>
+           <li id="edit_comefrom_item">
+
+               <div id="edit_comefrom_hide">
+                   所在地区：
+                   <span th:text="${session.user.comefrom}"></span>
+               </div>
+           </li>
+           <li id="edit_redate_item">
+
+               <div id="edit_redate_hide">
+                   最近一次修改时间：
+                   <span th:text="${session.user.redate}"></span>
+               </div>
+           </li>
+
+       </ul>
+
+    </div>
+</div>
+</body>
+</html>

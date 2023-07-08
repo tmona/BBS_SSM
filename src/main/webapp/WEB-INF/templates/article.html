@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .error{
+            color:red;
+        }
+    </style>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/article.css}"/>
+<script type="text/javascript" th:src="@{/static/js/jquery-1.8.2.min.js}"></script>
+<script type="text/javascript" th:src="@{/static/js/vue.global.js}"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<!--jquery 表单校验-->
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+<!--文章页面-->
+<body>
+
+<div th:if="${session.user==null||session.user.usertype=='1'}">
+    <a th:href="@{/consumer}">首页</a> &raquo;<a th:href="@{'/showBbs/'+${post.boardid}+'/1'}" th:text="${boardname}"></a>&raquo; <a
+        th:href="@{'/article/'+${post.boardid}+'/'+${post.bbsid}}" th:text="${post.bbstitle}"></a>
+</div>
+
+<br>
+<div th:if="${session.user!=null&&session.user.usertype=='0'}">
+    <button onclick="addEssentialBbs(this)" th:data-bbsid="${post.bbsid}" th:data-bbshot="${post.bbshot}">精华帖</button>
+</div>
+
+<!--文章展示-->
+<div>
+
+    <div>
+        <form th:action="@{/search}">
+            <input type="text" placeholder="搜索" name="content" class="search-ipt">
+            <input type="submit" value="搜索" class="search_btn">
+        </form>
+
+    </div>
+    <div>
+        <table th:border="1">
+            <tr>
+                <th>发表人：<span th:text="${post.username}"></span></th>
+                <th><span th:text="${post.dateandtime}"></span></th>
+            </tr>
+            <tr>
+                <td class="d1">
+                    <img th:src="@{${user.userheaderimage}}" alt="作者" style="width: 40px;height: 40px;border-radius: 50%;margin-right: 5px;">
+                </td>
+                <td>
+                    <h1 th:text="${post.bbstitle}"></h1>
+                    <pre th:text="${post.bbscontent}"></pre>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+<!--    游客显示的评论-->
+
+    <div id="visitor_comments" th:if="${session.user==null}" class="post-body">
+
+        <!--    评论列表-->
+        <h2>评论列表</h2>
+        <div th:id="'commentList'+${item.id}" th:each="item:${comments}">
+            <div class="list-group-item mainComments" >
+                <div style="position: absolute; visibility: hidden; top: -170px;" th:id="${item.id}">
+                </div>
+                <div>
+                    <img th:src="@{${item.userHeaderImage}}" alt="用户头像"
+                         style="width: 40px;height: 40px;border-radius: 50%;margin-right: 5px;">
+                </div>
+                <div class="post-main">
+                    <pre th:text="${item.username}+':'+${item.message}"></pre>
+                    <span style="font-size: 10px;" th:text="${item.createdAt}"></span>
+                </div>
+            </div>
+
+            <!--            子评论-->
+            <div th:each="child:${item.children}" th:id="'commentList'+${child.id}" >
+                <div class="list-group-item childComments post-card">
+                    <div style="position: absolute; visibility: hidden; top: -170px;" th:id="${child.id}">
+                    </div>
+                    <div class="post-owner">
+                        <img th:src="@{${child.userHeaderImage}}" alt="用户头像"
+                             style="width: 40px;height: 40px;border-radius: 50%;margin-right: 5px;">
+                    </div>
+                    <div class="post-main">
+                        <div class="body file-read image-click-view">
+                        <p style="font-size: 10px;" th:text="${child.username}+'回复'+${child.parentName}+': '"></p>
+                            <pre th:text="${child.message}"></pre>
+                        </div>
+                        <span style="font-size: 10px;" th:text="${child.createdAt}"></span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="comment-section" th:if="${session.user!=null}">
+    <!--        会员用户可以进行评论，游客不能进行评论-->
+    <form th:action="@{'/showBbs/'+${post.bbsid}+'/addcomment'}" method="post" th:if="${session.user!=null&&session.user.usertype=='1'}" id="commentForm">
+        <textarea name="message" placeholder="Leave your comments here..." cols="30" rows="10"></textarea>
+        <input type="hidden" name="username"  th:value="${session.user.username}">
+        <input type="hidden" name="userId" th:value="${session.user.id}">
+        <input type="hidden" name="articleId" th:value="${post.bbsid}">
+        <br>
+        <button type="button" onclick="addComment()" class="comment_btn">评论</button>
+<!--        <button type="button" @click="addComment">评论</button>-->
+    </form>
+
+        <!--    普通用户和管理员的评论-->
+        <div id="comments">
+
+    <!--    评论列表-->
+        <h2>评论列表</h2>
+        <div th:id="'commentList'+${item.id}" th:each="item:${comments}" >
+            <div class="list-group-item">
+                <img th:src="@{${item.userHeaderImage}}" alt="用户头像"
+                     style="width: 40px;height: 40px;border-radius: 50%;margin-right: 5px;">
+               <div>
+                       <span style="font-size: 10px;" th:text="${item.username}+': '+${item.message}"></span> <br>
+                       <span style="font-size: 10px;" th:text="${item.createdAt}"></span>
+                        <div id="reply_comment_item">
+                            <button onclick="replycomment()" th:data-parentid="${item.id}" id="reply_item">回复</button>
+                            <button th:if="${session.user.getId()==item.userId ||session.user.usertype=='0'}" onclick="deleteComment(this)" th:data-id="${item.id}" th:data-bbsid="${item.articleId}">删除</button>
+                            <div th:id="'reply_form_item'+${item.id} "style="display: none">
+                                <form th:action="@{'/showBbs/'+${post.bbsid}+'/addcomment'}" th:id="'reply'+${item.id}" method="post">
+                                    <textarea name="message" th:placeholder="${session.user.username}+'回复'+${item.username}+':'" cols="20" rows="10" th:data-id="'message'+${item.id}"></textarea>
+                                    <input type="hidden" name="username"  th:value="${session.user.username}">
+                                    <input type="hidden" name="userId" th:value="${session.user.id}">
+                                    <input type="hidden" name="articleId" th:value="${post.bbsid}">
+                                    <input type="hidden" name="parentId"  th:value="${item.id}">
+                                    <input type="hidden" name="parentName" th:value="${item.username}">
+                                    <input type="hidden" name="originalId" th:value="${item.id}">
+                                    <br>
+                                    <button type="button" onclick="addReplyComment()" th:data-parentid="${item.id}">评论</button>
+                                    <button type="button" onclick="addCencelComment()" th:data-parentid="${item.id}" >取消</button>
+                                </form>
+                            </div>
+                        </div>
+               </div>
+            </div>
+
+<!--            子评论-->
+            <div th:each="child:${item.children}" th:id="'commentList'+${child.id}">
+                <div class="list-group-item">
+                    <img th:src="@{${child.userHeaderImage}}" alt="用户头像"
+                         style="width: 40px;height: 40px;border-radius: 50%;margin-right: 5px;">
+                    <div>
+                        <span style="font-size: 10px;" th:text="${child.username}+'回复'+${child.parentName}+': '+${child.message}"></span> <br>
+                        <span style="font-size: 10px;" th:text="${child.createdAt}"></span>
+                        <div th:id="'reply_comment_item'+${child.id}">
+                            <button onclick="addReplyComment()" th:data-parentid="${child.parentId}">回复</button>
+                            <button th:if="${session.user.getId()==child.userId ||session.user.usertype=='0'}" onclick="deleteComment(this)" th:data-id="${child.id}" th:data-bbsid="${child.articleId}">删除</button>
+                            <div th:id="'reply_form_item'+${child.id}" style="display: none">
+                                <form th:action="@{'/showBbs/'+${post.bbsid}+'/addcomment'}" th:id="'reply'+${child.id}">
+                                    <textarea name="message" th:placeholder="${session.user.username}+'回复'+${child.username}+':'" cols="20" rows="10" th:data-id="'message'+${child.id}" ></textarea>
+                                    <input type="hidden" name="username"  th:value="${session.user.username}">
+                                    <input type="hidden" name="userId" th:value="${session.user.id}">
+                                    <input type="hidden" name="articleId" th:value="${post.bbsid}">
+                                    <input type="hidden" name="parentId"  th:value="${child.id}">
+                                    <input type="hidden" name="parentName" th:value="${child.username}">
+                                    <input type="hidden" name="originalId" th:value="${child.originalId}">
+                                    <br>
+                                    <button type="button" onclick="addReplyComment()" th:data-parentid="${child.id}">评论</button>
+                                    <button type="button" onclick="addCancelComment()" th:data-parentid="${child.id}">取消</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+
+<!--        主评论-->
+        function replycomment(){
+            var parentid=event.target.getAttribute("data-parentid");
+            $('#commentList'+parentid).find('#reply_form_item'+parentid).show();
+        }
+
+        function addCencelComment(){
+            var parentid=event.target.getAttribute("data-parentid");
+            $('textarea[data-id="message'+parentid+'"]').val('');
+            $('#commentList'+parentid).find('#reply_form_item'+parentid).hide();
+        }
+
+        // 回复评论
+        function addReplyComment(){
+            var parentid=event.target.getAttribute("data-parentid");
+            // alert(parentid);
+            $.ajax({
+                url:$('#reply'+parentid).attr("action"),
+                type:'post',
+                data:$('#reply'+parentid).serialize(),
+                success:function (comments){
+                    alert('回复成功');
+                    $('textarea[data-id="message'+parentid+'"]').val('');
+                    var temp=`<div class="list-group-item" id="commentList${comments.comment.id}">
+                <img src="${comments.comment.userHeaderImage}" alt="用户头像"
+                     style="width: 40px;height: 40px;border-radius: 50%;margin-right: 5px;">
+               <div>
+                       <span style="font-size: 10px;">${comments.user.username}回复${comments.comment.username}: ${comments.comment.message}</span> <br>
+                       <span style="font-size: 10px;">${comments.comment.createdAt}</span>
+                        <div id="reply_comment_item${comments.comment.id}">
+                            <button onclick="replycomment()" data-parentid="${comments.comment.id}">回复</button>
+                            <button onclick="deleteComment(this)" data-id="${comments.comment.id}" data-bbsid="${comments.comment.articleId}">删除</button>
+                            <div id="reply_form_item${comments.comment.id}" style="display: none">
+
+                                <form action="/SSM_BBS/showBbs/${comments.comment.articleId}/addcomment"  id="reply${comments.comment.id}" method="post">
+                                    <textarea name="message" placeholder="${comments.user.username}回复${comments.comment.username}: " cols="20" rows="10" data-id="message${comments.comment.id}"></textarea>
+                                    <input type="hidden" name="username"  value="${comments.user.username}">
+                                    <input type="hidden" name="userId" value="${comments.user.id}">
+                                    <input type="hidden" name="articleId" value="${comments.comment.articleId}">
+                                    <input type="hidden" name="parentId"  value="${comments.comment.id}">
+                                    <input type="hidden" name="parentName" value="${comments.comment.username}">
+                                    <input type="hidden" name="originalId" value="${comments.comment.originalId}">
+                                    <br>
+                                    <button type="button" onclick="addReplyComment()" data-parentid="${comments.comment.id}">评论</button>
+                                    <button type="button" onclick="addCencelComment()" data-parentid="${comments.comment.id}" >取消</button>
+                                </form>
+                            </div>
+                        </div>
+               </div>
+            </div>`;
+                    $('#commentList'+parentid).append(temp);
+                    // 隐藏回复评论
+                    $('#commentList'+parentid).find('#reply_form_item'+parentid).hide();
+
+                },
+                error:function (){
+                    alert('回复失败');
+                }
+            })
+        }
+
+
+
+        function deleteComment(){
+
+            var id=event.target.getAttribute("data-id");
+            var bbsid=event.target.getAttribute("data-bbsid");
+            // alert("id="+id+"   bbsid="+bbsid)
+            $.ajax({
+                url:'/SSM_BBS/showBbs/'+bbsid+'/deletecomment/'+id,
+                type:'get',
+                success:function(){
+                    // 移除评论及子评论
+                   $('#commentList'+id).remove()
+                    alert("删除评论成功");
+                },
+                error:function(){
+                    alert("删除评论失败");
+                }
+
+            })
+        }
+
+
+        function addComment(){
+            $.ajax({
+                url: $('#commentForm').attr('action'),
+                type: 'post',
+                data: $('#commentForm').serialize(),
+                success: function(comments) {
+                    // 清空评论文本框
+                    $('textarea[name="message"]').val('');
+                    var temp=`<div class="list-group-item" id="commentList${comments.comment.id}">
+                <img src="${comments.comment.userHeaderImage}" alt="用户头像"
+                     style="width: 40px;height: 40px;border-radius: 50%;margin-right: 5px;">
+               <div>
+                       <span style="font-size: 10px;">${comments.comment.username}: ${comments.comment.message}</span> <br>
+                       <span style="font-size: 10px;">${comments.comment.createdAt}</span>
+                        <div id="reply_comment_item${comments.comment.id}">
+                            <button onclick="replycomment()" data-parentid="${comments.comment.id}">回复</button>
+                            <button onclick="deleteComment(this)" data-id="${comments.comment.id}" data-bbsid="${comments.comment.articleId}">删除</button>
+                            <div id="reply_form_item${comments.comment.id}" style="display: none">
+
+                                <form action="/SSM_BBS/showBbs/${comments.comment.articleId}/addcomment"  id="reply${comments.comment.id}" method="post">
+                                    <textarea name="message" placeholder="${comments.user.username}回复${comments.comment.username}: " cols="20" rows="10" data-id="message${comments.comment.id}"></textarea>
+                                    <input type="hidden" name="username"  value="${comments.user.username}">
+                                    <input type="hidden" name="userId" value="${comments.user.id}">
+                                    <input type="hidden" name="articleId" value="${comments.comment.articleId}">
+                                    <input type="hidden" name="parentId"  value="${comments.comment.id}">
+                                    <input type="hidden" name="parentName" value="${comments.comment.username}">
+                                    <input type="hidden" name="originalId" value="${comments.comment.id}">
+                                    <br>
+                                    <button type="button" onclick="addReplyComment()" data-parentid="${comments.comment.id}">评论</button>
+                                    <button type="button" onclick="addCencelComment()" data-parentid="${comments.comment.id}" >取消</button>
+                                </form>
+                            </div>
+                        </div>
+               </div>
+            </div>`;
+                    $('#comments').append(temp);
+                    alert("评论成功");
+                },
+                error: function() {
+                    // 请求出错，给用户提示信息，或者弹出错误对话框
+                    alert('提交评论失败，请重试！');
+                }
+            });
+        }
+
+        // 点击 精华帖按钮，将文章添加为精华帖
+        function addEssentialBbs(ele){
+            var bbsid=ele.getAttribute("data-bbsid");
+            var bbshot=ele.getAttribute("data-bbshot");
+            if(bbshot=='1'){
+                alert('已经为精华帖')
+            }
+            else{
+                $.ajax({
+                    url:'/SSM_BBS/showBbs/addessentialbbs/'+bbsid,
+                    type:'get',
+                    success:function (){
+                        alert("添加成功");
+                    },
+                    error:function (){
+                        alert("添加失败");
+                    }
+                })
+            }
+
+        }
+
+    </script>
+<script type="text/javascript">
+    $('#loginForm').validate({
+        rules:{
+            username:"required",
+            userpass:"required"
+        },
+        messages:{
+            username:{
+                required:"*请输入您的用户名"
+            },
+            userpass:{
+                required:"*请输入密码"
+            }
+        }
+    })
+</script>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,52 @@
+/*左边导航条*/
+
+.left{
+    background-color: pink;
+
+}
+.login_btn{
+    background-color: #e97c62;
+    /*margin-right: 10px;*/
+
+    margin-left:30px;
+
+}
+#user_login_register{
+    background-color: rgba(0, 0, 0, 0.08);
+    padding-top: 25px;
+    text-aglin:center;
+}
+.login_btn,#btn-register{
+    border:none;
+    border-radius: 3px;
+    padding: 4px 8px;
+    font-size: 11px;
+    color: white;
+
+}
+#btn-register{
+    background-color: #5cae97;
+}
+.input-wrapper{
+    padding: 5px;
+    margin-left:12px;
+}
+
+.user_info{
+    width: 115px;
+    border-radius: 3px;
+    border: none;
+    font-size: 11px;
+    padding: 4px;
+    height: 28px;
+    line-height: 28px;
+    background: white;
+    box-shadow: inset 0px 1px 0px 0px rgba(0, 0, 0, 0.03), inset 0px 3px 0px 0px rgba(0, 0, 0, 0.02);
+    outline: none;
+}
+.btn-group{
+    display: inline-block;
+    padding: 15px 0;
+    text-align: center;
+}
+

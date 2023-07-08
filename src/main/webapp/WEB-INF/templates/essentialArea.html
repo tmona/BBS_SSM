@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+    </style>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+
+<body>
+
+<!--精华区-->
+
+<div>
+    <a href="@{/consumer}">首页</a>&raquo;<a th:href="@{/essentialArea}">精华区</a>
+</div>
+<div>
+    <div>
+        <form th:action="@{/search}">
+            <input type="text" placeholder="搜索" name="content" class="search-ipt">
+            <input type="submit" value="搜索" class="search_btn">
+        </form>
+
+    </div>
+    <div>
+        <table th:border="1">
+            <tr>
+                <th>标题</th>
+                <th>作者</th>
+                <th>回复/查看</th>
+                <th>发表日期</th>
+            </tr>
+            <div  th:if="${bbshots}">
+                <tr th:each="bbs:${bbshots}">
+                    <td>
+                        <a th:href="@{'/article/'+${bbs.boardid}+'/'+${bbs.bbsid}}" th:text="${bbs.bbstitle}"></a>
+                    </td>
+                    <td th:text="${bbs.username}"></td>
+                    <td th:text="${bbs.child +'/'+bbs.bbsclick}"></td>
+
+                    <td th:text="${bbs.dateandtime}"></td>
+                </tr>
+
+            </div>
+
+        </table>
+    </div>
+</div>
+
+
+
+</body>
+</html>

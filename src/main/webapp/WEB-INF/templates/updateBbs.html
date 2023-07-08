@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        a{
+            target:"right";
+        }
+    </style>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<!--修改帖子-->
+<body>
+<form th:action="@{'/updateBbs/'+${bbs.boardid}+'/'+${bbs.bbsid}}" method="post">
+    <h1>修改论坛</h1>
+    <div>
+        <h1>标题</h1>
+        <input type="text" name="bbstitle" th:value="${bbs.bbstitle}"><br>
+    </div>
+    <div>
+        <h1>正文</h1>
+        <textarea cols="100" rows="30" name="bbscontent" th:text="${bbs.bbscontent}"></textarea><br>
+    </div>
+    <input type="submit" value="发布帖子" id="btn"><br>
+</form>
+</body>
+</html>

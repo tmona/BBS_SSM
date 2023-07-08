@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<body>
+<div>
+    <h1>搜索结果</h1>
+    <table th:border="1">
+        <tr th:each="topic:${boards}">
+            <td>
+                <a th:href="@{'/customer/showBbs/'+${topic.boardid}}">
+                    <h2 th:text="${topic.boardname}"></h2>
+                    <span th:text="${topic.boardintroduce}"></span>
+                </a>
+            </td>
+            <td th:text="'版主：'+${topic.boardmanager}"></td>
+            <td th:text="'主题数:'+${topic.boardtopics}"></td>
+            <td th:text="'最后发表时间：'+${topic.boardlasttime}"></td>
+
+        </tr>
+        <tr th:each="topic:${bbs}">
+            <td>
+                <a th:href="@{'/article/'+${topic.boardid}+'/'+${topic.bbsid}}" th:text="${topic.bbstitle}"></a>
+            </td>
+            <td th:text="${'作者：'+topic.username}"></td>
+            <td th:text="${'评论数：'+topic.child +'/点击量：'+topic.bbsclick}"></td>
+
+            <td th:text="'最后一次发表:'+${topic.dateandtime}"></td>
+        </tr>
+
+    </table>
+</div>
+</body>
+</html>

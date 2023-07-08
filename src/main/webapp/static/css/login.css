@@ -1,0 +1,100 @@
+#page-register{
+    /*font-size: 0;*/
+    text-align: center;
+    background: #f3f3f3;
+    margin:0;
+
+}
+#page-register .top-red{
+    position: relative;
+    display: inline-block;
+    background: rgba(230, 109, 116, 0.5);
+    width: 100%;
+    height: 220px;
+}
+.top-red .logo{
+    display: inline-block;
+    margin-top: 18px;
+    color: white;
+}
+.top-red .logo > *{
+    display: inline-block;
+    width: 100%;
+    letter-spacing: 0.05em;
+    text-shadow: 1px 0 3px rgba(0, 0, 0, 0.27);
+}
+.top-red .logo .h1{
+    font-size: 36px;
+    font-weight: 600;
+}
+.main-container{
+    position: relative;
+    display: inline-block;
+    margin: 0 auto;
+    padding: 30px 50px;
+    min-height: 440px;
+    width: 800px;
+    top: -105px;
+    background: white;
+    box-shadow: 0 0 10px rgba(13, 5, 9, 0.27);
+    text-align: left;
+}
+.main-container #loginForm{
+    display:inline-block;
+    margin-left:250px;
+    margin-top:50px;
+
+}
+#loginForm .row,#addUserForm .row{
+    position: relative;
+    display: inline-block;
+    /*width: 100%;*/
+    height: 30px;
+    line-height: 30px;
+    margin-bottom: 25px;
+    margin-left: 14px;
+}
+#loginForm .row > *,#addUserForm .row > *{
+    font-size: 14px;
+    color: #333;
+    vertical-align: middle;
+}
+#loginForm .row .label{
+    display: inline-block;
+    width: 135px;
+    letter-spacing: 0.05em;
+}
+#loginForm .row input.medium,#addUserForm .row input.medium,#updateuser .row input.medium{
+    width: 180px;
+}
+
+#loginForm .row input[type=password],input[type=text],#addUserForm .row input[type=password],input[type=text],#updateuser .row input[type=password],input[type=text]{
+    border-radius: 3px;
+    line-height: 28px;
+    margin: 0;
+    border: 1px solid #eeeeee;
+    padding: 0 10px;
+    font-size: 12px;
+    background: white;
+    box-shadow: inset 0px 1px 0px 0px rgba(0, 0, 0, 0.03), inset 0px 3px 0px 0px rgba(0, 0, 0, 0.02);
+    outline: none;
+    resize: none;
+    font-family: "tahoma", "tahoma2", -apple-system, "BlinkMacSystemFont", "Helvetica Neue", "Arial", "PingFang SC", "Hiragino Sans GB", "STHeiti", "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
+}
+#loginForm .button,#addUserForm .button,#updateuser .button{
+    position: relative;
+    display: inline-block;
+    margin-right: 30px;
+    border-radius: 3px;
+    border: 1px solid #959595;
+    width: 78px;
+    height: 28px;
+    text-align: center;
+    background: white;
+    cursor:pointer;
+}
+#loginForm .button.green,#addUserForm .button.green,#updateuser .button.green{
+    background:  #5cae97;
+    border: 1px solid  #5cae97;
+    color: white !important;
+}

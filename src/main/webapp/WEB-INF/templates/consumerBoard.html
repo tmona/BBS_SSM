@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      border-spacing: 0;
+    }
+  </style>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<body>
+<div>
+  <div>
+    <form th:action="@{/search}">
+      <input type="text" placeholder="搜索" name="content" class="search-ipt">
+      <input type="submit" value="搜索" class="search_btn">
+    </form>
+
+  </div>
+  <div>
+    <h1>板块浏览</h1>
+    <table th:border="1">
+      <tr>
+        <th>论坛</th>
+        <th>主题</th>
+        <th>最后发表</th>
+        <th>版主</th>
+      </tr>
+      <tr th:each="topic:${session.boardList}">
+        <td>
+          <a th:href="@{'/customer/showBbs/'+${topic.boardid}}">
+            <h2 th:text="${topic.boardname}"></h2>
+            <span th:text="${topic.boardintroduce}"></span>
+          </a>
+        </td>
+        <td th:text="${topic.boardtopics}"></td>
+        <td th:text="${topic.boardlasttime}"></td>
+        <td th:text="${topic.boardmanager}"></td>
+
+      </tr>
+    </table>
+  </div>
+</div>
+
+
+</body>
+</html>

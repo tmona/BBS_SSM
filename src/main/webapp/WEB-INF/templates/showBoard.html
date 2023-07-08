@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+    </style>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/board.css}"/>
+<script th:src="@{/static/js/jquery-1.8.2.min.js}"></script>
+<body>
+<!--<span th:text="${session.page.list}"></span>-->
+<div>
+    <div>
+        <form th:action="@{/search}">
+            <input type="text" placeholder="搜索" name="content"class="search-ipt">
+            <input type="submit" value="搜索" class="search_btn">
+        </form>
+
+    </div>
+
+<table th:border="1">
+  <tr>
+    <th>论坛</th>
+    <th>主题</th>
+    <th>最后发表</th>
+    <th>版主</th>
+    <th>操作</th>
+  </tr>
+    <tr th:each="topic:${session.page.list}">
+      <td>
+          <a th:href="@{'/showBbs/'+${topic.boardid}+'/1'}">
+              <p th:text="${topic.boardname}" class="board_title"></p>
+              <span th:text="${topic.boardintroduce}"></span>
+          </a>
+      </td>
+      <td th:text="${topic.boardtopics}"></td>
+      <td th:text="${topic.boardlasttime}"></td>
+      <td th:text="${topic.boardmanager}"></td>
+      <td>
+        <a th:href="@{'/updateBoard/'+${topic.boardid}+'/'+${session.page.pageNum}}" th:text="修改"></a>
+        <a th:href="@{'/deleteBoard/page/'+${topic.boardid}+'/'+${session.page.pageNum}}" onclick="deleteBoard()" th:text="删除"></a>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="5" >
+              <span th:if="${session.page.hasPreviousPage}">
+                  <a th:href="@{'/showBoard/page/'+${session.page.prePage}}">&lt;上一页</a>
+              </span>
+            <span th:if="${!session.page.hasPreviousPage}">
+                  <a href="#">&lt;上一页</a>
+              </span>
+        <span th:each="num:${session.page.navigatepageNums}">
+                  <a th:if="${session.page.pageNum==num}" th:href="@{'/showBoard/page/'+${num}}" th:text="'['+${num}+']'" style="color:red;"></a>
+                  <a th:if="${session.page.pageNum!=num}" th:href="@{'/showBoard/page/'+${num}}" th:text="${num}"></a>
+              </span>
+            <span th:if="${session.page.hasNextPage}">
+                  <a th:href="@{'/showBoard/page/'+${session.page.nextPage}}">下一页&gt;</a>
+              </span>
+          <span th:if="${!session.page.hasNextPage}">
+                  <a href="#">下一页</a>
+              </span>
+
+      </td>
+    </tr>
+    <form method="post" id="delete_board">
+      <input type="hidden" name="_method" value="delete">
+    </form>
+</table>
+<form th:action="@{/addBoard}" method="post" id="addBoardForm">
+    <h1>添加论坛</h1>
+    <div>
+        <h1>标题</h1>
+        <input type="text" name="boardname"><br>
+    </div>
+    <div>
+        <h1>正文</h1>
+        <textarea cols="60" rows="30" name="boardintroduce"></textarea><br>
+    </div>
+    <input type="hidden" th:value="${session.user.username}" name="boardmanager">
+    <input type="button" value="发布板块" id="btn" onclick="addBoard()"><br>
+</form>
+</div>
+<script type="text/javascript">
+   function deleteBoard(){
+       var form=document.getElementById("delete_board");
+       //event.target表示当前触发事件的标签
+       form.action=event.target.href;
+       form.submit();
+       event.preventDefault();
+   }
+   function addBoard(){
+
+       $.ajax({
+           url:$('#addBoardForm').attr('action'),
+           type:'post',
+           data:$('#addBoardForm').serialize(),
+           success:function(){
+               $('#addBoardForm').trigger('reset');
+               alert('添加板块成功');
+           },
+           error:function(){
+               alert('添加文章失败');
+       }
+       })
+   }
+
+
+</script>
+</body>
+</html>

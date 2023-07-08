@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        a{
+            target:"right";
+        }
+        table {
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+    </style>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<!--管理员 精华帖页面-->
+<body>
+<div>
+    <div>
+        <form th:action="@{/search}">
+            <input type="text" placeholder="搜索" name="content" class="search-ipt">
+            <input type="submit" value="搜索" class="search_btn">
+        </form>
+
+    </div>
+<table th:border="1">
+  <tr>
+    <th>标题</th>
+    <th>作者</th>
+    <th>回复/查看</th>
+    <th>发表日期</th>
+    <th>操作</th>
+  </tr>
+  <div  th:if="${bbshotpage}">
+    <tr th:each="bbs:${bbshotpage.list}">
+      <td>
+        <a th:href="@{'/article/'+${bbs.boardid}+'/'+${bbs.bbsid}}" th:text="${bbs.bbstitle}"></a>
+      </td>
+      <td th:text="${bbs.username}"></td>
+      <td th:text="${bbs.child +'/'+bbs.bbsclick}"></td>
+
+      <td th:text="${bbs.dateandtime}"></td>
+      <td>
+        <a th:href="@{'/updateBbs/'+${bbs.boardid}+'/'+${bbs.bbsid}}" th:text="修改"></a>
+        <a th:href="@{'/deleteBbshot/'+${bbs.boardid}+'/'+${bbs.bbsid}}" onclick="deleteBbshot()" th:text="取消"></a>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="5" >
+              <span th:if="${bbshotpage.hasPreviousPage}">
+                  <a th:href="@{'/showBbs/'+${boardid}+'/'+${bbshotpage.prePage}}">&lt;上一页</a>
+              </span>
+        <span th:if="${!bbshotpage.hasPreviousPage}">
+                  <a href="#">&lt;上一页</a>
+              </span>
+        <span th:each="num:${bbshotpage.navigatepageNums}">
+                  <a th:if="${bbshotpage.pageNum==num}" th:href="@{'/showBbs/'+${boardid}+${num}}" th:text="'['+${num}+']'" style="color:red;"></a>
+                  <a th:if="${bbshotpage.pageNum!=num}" th:href="@{'/showBbs/'+${boardid}+${num}}" th:text="${num}"></a>
+              </span>
+        <span th:if="${bbshotpage.hasNextPage}">
+                  <a th:href="@{'/showBbs/'+${boardid}+'/'+${bbshotpage.nextPage}}">下一页&gt;</a>
+              </span>
+        <span th:if="${!bbshotpage.hasNextPage}">
+                  <a href="#">下一页&gt;</a>
+              </span>
+
+      </td>
+    </tr>
+  </div>
+  <form method="post" id="delete_bbshot">
+    <input type="hidden" name="_method" value="delete">
+  </form>
+</table>
+</div>
+<script type="text/javascript">
+  function deleteBbshot(){
+    var form=document.getElementById("delete_bbshot");
+    //event.target表示当前触发事件的标签
+    form.action=event.target.href;
+    form.submit();
+    event.preventDefault();
+  }
+
+</script>
+
+</body>
+</html>

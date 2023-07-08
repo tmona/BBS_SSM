@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        .error{
+            color:red;
+        }
+    </style>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/register.css}"/>
+<link rel="stylesheet" th:href="@{/static/css/login.css}"/>
+<!--jquery 表单校验-->
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/lib/jquery.js"></script>
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/jquery.validate.min.js"></script>
+<script src="http://static.runoob.com/assets/jquery-validation-1.14.0/dist/localization/messages_zh.js"></script>
+<!--注册页面-->
+<body id="page-register">
+<div class="top-red">
+    <div class="logo">
+        <span class="h1">BBS论坛</span>
+    </div>
+
+</div>
+    <!--        注册模块-->
+    <div class="main-container">
+        <form th:action="@{/addUser}" method="post" id="registerForm" name="myForm">
+            <div class="row">
+                <span class="label">用户名</span>
+                <input type="text" name="username" class="medium" placeholder="用户名 / username">
+            </div>
+            <div class="row">
+                <span class="label">密码</span>
+                <input type="password" name="pwd" id="pwd" class="medium" placeholder="密码 / password">
+            </div>
+           <div class="row">
+               <span class="label">确认密码</span>
+               <input type="password" name="repwd" class="medium" placeholder="确认密码 /Comfirm password">
+           </div>
+            <div class="row">
+                <button type="button"  class="button red" onclick="addUser()">注册</button>
+                <button type="reset"  class="button">重置</button>
+            </div>
+
+        </form>
+    </div>
+
+<!--表单验证-->
+<script type="text/javascript">
+    $('#registerForm').validate({
+        rules:{
+            username:{
+                required:true,
+                minlength:2
+            },
+            pwd:{
+                required:true,
+                minlength:8,
+                maxlength:12
+
+            },
+            repwd:{
+                required:true,
+                minlength:8,
+                equalTo:"#pwd"
+            }
+        },
+        messages:{
+            username:{
+                required:"*请输入您的用户名你",
+                minlength:"*用户名必须有两个字符组成"
+            },
+            pwd:{
+                required:"*请输入密码",
+                minlength:"*密码长度不能小于 8 个字符",
+                maxlength:"*密码长度不能超过 12 个字符"
+            },
+            repwd:{
+                required:"*请输入确认密码",
+                minlength:"*密码长度不能小于 5 个字符",
+                equalTo:"*两次密码输入不一致"
+            }
+
+        }
+
+    })
+</script>
+
+<script type="text/javascript">
+    function addUser(){
+        var formEle=document.getElementById('registerForm');
+        var username=document.forms["myForm"]["username"].value;
+        var password=document.forms["myForm"]["pwd"].value;
+        var repwd=document.forms["myForm"]["repwd"].value;
+        if(username==null||username==""){
+            alert("用户名必须填写");
+            return false;
+        }
+        else if(password==null||password==""){
+            alert("密码必须填写");
+            return false;
+        }
+        else if(repwd==null||repwd==""){
+            alert("请输入确认密码");
+            return false;
+        }
+        else if(password!=repwd){
+            alert("密码和确认密码必须一致");
+            return false;
+        }
+        else{
+            $.ajax({
+                url:$('#registerForm').attr('action'),
+                type:'post',
+                data: $('#registerForm').serialize(),
+                success:function(){
+                    // 清除表单项
+                    formEle.reset();
+                    alert('注册成功！请前往登录页面进行登录');
+                },
+                error:function(xhr){
+                    alert('注册失败！'+xhr.responseJSON.error);
+                }
+            })
+        }
+
+    }
+</script>
+
+</body>
+</html>

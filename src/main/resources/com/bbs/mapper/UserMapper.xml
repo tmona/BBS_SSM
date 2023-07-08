@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bbs.mapper.UserMapper">
+<!--    int addUser(User u);-->
+    <insert id="addUser">
+        insert into bbs_user values(null,#{username},#{userpass},'1',null,null,null,null,null,null,now(),'https://bpic.51yuansu.com/pic3/cover/04/05/48/6135dfb895320_610.jpg?x-oss-process=image/resize,w_260/sharpen,100')
+    </insert>
+
+
+<!--    //  通过username查询用户-->
+<!--    User selectUserByUsername(String username);-->
+
+    <select id="selectUserByUsername" resultType="User">
+        select * from bbs_user where username=#{username}
+    </select>
+
+
+
+<!--    //    通过id查询用户-->
+<!--    User selectUserById(int id);-->
+
+    <select id="selectUserById" resultType="User">
+        select * from bbs_user where id=#{id}
+    </select>
+
+<!--    List<User> getAllAdmin();-->
+
+    <select id="getAllAdmin" resultType="User">
+        select * from bbs_user where usertype='0'
+    </select>
+
+<!--    List<User> searchUserByUsername(String username);-->
+
+    <select id="searchUserByUsername"  resultType="User">
+        select * from bbs_user where match(`username`) against (#{username} in NATURAL LANGUAGE MODE)
+    </select>
+
+<!--        int updateUsername(@Param("userid")Integer userid,@Param("username")String username);
+-->
+
+    <update id="updateUsername">
+        update bbs_user set username=#{username} where id=#{userid}
+    </update>
+
+
+<!--     int updateUserInfo(@Param("u")User u);-->
+
+    <update id="updateUserInfo">
+        update bbs_user set username=#{u.username},userpass=#{u.userpass},usermail=#{u.usermail},userhomepage=#{u.userhomepage},homepagename=#{u.homepagename},sex=#{u.sex},comefrom=#{u.comefrom},usersign=#{u.usersign},redate=now() where id=#{u.id}
+    </update>
+
+<!--     int deleteAdminUser(Integer id);-->
+
+    <delete id="deleteAdminUser">
+        delete from bbs_user where id=#{id}
+    </delete>
+
+
+<!--        int insertAdminUser(@Param("username")String username,@Param("userpass") String userpass);
+-->
+
+    <insert id="insertAdminUser">
+        insert into bbs_user(id,username,userpass,usertype) values(null,#{username},#{userpass},'0')
+    </insert>
+
+</mapper>

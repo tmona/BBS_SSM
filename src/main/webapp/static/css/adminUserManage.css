@@ -1,0 +1,12 @@
+#updateuser{
+    display:none;
+}
+#addUserForm .row .label,#updateuser .row .label{
+    display: inline-block;
+    width: 50px;
+    letter-spacing: 0.05em;
+}
+.userManage{
+    margin-top:20px;
+    margin-bottom:20px;
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<link rel="stylesheet" th:href="@{/static/css/main.css}"/>
+<body>
+<!--修改个人信息-->
+<div>
+    <a th:href="@{/consumer}">首页</a> &raquo;<a th:href="@{/editPersonalnfo}">编辑个人中心</a>
+    <form th:action="@{'/personalnfo/updatepersonInfo/'+${session.user.id}}">
+        用户昵称:<input type="text" th:value="${session.user.username}" name="username"><br>
+        性别:&nbsp;&nbsp;男<input type="radio" name="sex" value="男" th:checked="${session.user.sex}=='男'" >&nbsp;
+        女<input type="radio" name="sex" value="女" th:checked="${session.user.sex}=='女'"><br>
+        电子邮件:<input type="email" th:value="${session.user.usermail}" name="usermail"><br>
+        所在地区:<input type="text" th:value="${session.user.comefrom}" name="comefrom"><br>
+        个人简介: <br> <textarea name="usersign" cols="30" rows="10" th:text="${session.user.usersign}"></textarea><br>
+        <input type="submit" value="保存">&nbsp; &nbsp;<input type="reset" value="重置">
+    </form>
+</div>
+</body>
+</html>
